@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int CODIGO_CAPTURA_FOTO = 123;
     private RecyclerView listaFoto;
     private FotoAdapter adapter;
+    private String AlbumActual = "Default_";
 
     // Barra Lateral
     private DrawerLayout drawerLayout;
@@ -89,11 +90,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void cargarFotos () {
+        fotos.clear();
+
         File directorio = this.getExternalFilesDir( Environment.DIRECTORY_PICTURES );
         File [] ficheros = directorio.listFiles();
         for ( File f:ficheros ) {
-            Bitmap image = BitmapFactory.decodeFile( f.getAbsolutePath() );
-            fotos.add( image );
+            if ( f.getName().startsWith( AlbumActual )) {
+                Bitmap image = BitmapFactory.decodeFile( f.getAbsolutePath() );
+                fotos.add( image );
+            }
         }
     }
 
@@ -101,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void hacerFoto() {
         try {
             Intent intent = new Intent ( MediaStore.ACTION_IMAGE_CAPTURE );
-
             archivo = crearFichero();
             Uri foto = FileProvider.getUriForFile( this, "mx.edu.itl.c19130897.proyectofinalandroid.fileprovider", archivo );
             intent.putExtra( MediaStore.EXTRA_OUTPUT, foto );
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public File crearFichero () throws IOException {
-        String pre = "foto_";
+        String pre = AlbumActual;
         File directorio = this.getExternalFilesDir( Environment.DIRECTORY_PICTURES );
         File img = File.createTempFile( pre + UUID.randomUUID().toString(), ".jpg", directorio );
         return img;
@@ -142,8 +146,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        if ( item.getItemId() == R.id.home ) {
-            Toast.makeText( this, "UWU", Toast.LENGTH_SHORT).show();
+        switch ( item.getItemId() ) {
+            case R.id.album_default: AlbumActual = "Default_"; Toast.makeText( this, "Default_", Toast.LENGTH_SHORT ).show();
+                                    cargarFotos (); adapter.notifyDataSetChanged(); break;
+            case R.id.album_casa: AlbumActual = "Casa_"; Toast.makeText( this, "Casa_", Toast.LENGTH_SHORT ).show();
+                                    cargarFotos (); adapter.notifyDataSetChanged(); break;
+            case R.id.album_universidad: AlbumActual = "Universidad_"; Toast.makeText( this, "Universidad_", Toast.LENGTH_SHORT ).show();
+                                    cargarFotos (); adapter.notifyDataSetChanged(); break;
         }
 
         return false;

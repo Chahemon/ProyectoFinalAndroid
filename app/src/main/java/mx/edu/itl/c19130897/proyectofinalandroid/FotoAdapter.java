@@ -48,6 +48,9 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
         public ViewHolder ( @NonNull View itemView ) {
             super( itemView );
             image = itemView.findViewById( R.id.imgViewFoto );
+
+
+
         }
     }
 
