@@ -28,7 +28,6 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
         View v = LayoutInflater.from( context ).inflate( R.layout.item_foto, parent, false);
         return new ViewHolder ( v );
-
     }
 
     @Override
@@ -39,7 +38,7 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return lista.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -48,7 +47,7 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
         public ViewHolder ( @NonNull View itemView ) {
             super( itemView );
-            image = itemView.findViewById( R.id.imgvFoto );
+            image = itemView.findViewById( R.id.imgViewFoto );
         }
     }
 

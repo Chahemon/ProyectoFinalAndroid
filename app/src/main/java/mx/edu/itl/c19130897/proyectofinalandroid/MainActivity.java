@@ -2,8 +2,11 @@ package mx.edu.itl.c19130897.proyectofinalandroid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,28 +18,33 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import mx.edu.itl.c19130897.androlib.util.permisos.PermisoApp;
 import mx.edu.itl.c19130897.androlib.util.permisos.ChecadorDePermisos;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int CODIGO_CAPTURA_FOTO = 123;
-    private Uri uriFoto;
     private RecyclerView listaFoto;
     private FotoAdapter adapter;
+
+    // Barra Lateral
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
 
     private List<Bitmap> fotos = new ArrayList<>();
 
@@ -50,19 +58,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        toolbar = findViewById( R.id.toolbar );
+        setSupportActionBar( toolbar );
+        drawerLayout = findViewById( R.id.drawer );
+        navigationView = findViewById( R.id.navigationView );
+
+        // Establecer evento onClick al NavigationView
+        navigationView.setNavigationItemSelectedListener( this );
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle ( this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer );
+        drawerLayout.addDrawerListener( actionBarDrawerToggle );
+        actionBarDrawerToggle.setDrawerIndicatorEnabled( true );
+        actionBarDrawerToggle.syncState();
+
         ChecadorDePermisos.checarPermisos( this, permisosReq );
-        /*
-        String absolutePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
-
-        File file1 = new File ( absolutePath, "foto20221201175614.jpg" );
-        Bitmap bitmap1 = null;
-        try {
-            bitmap1 = BitmapFactory.decodeStream ( new FileInputStream( file1 ) );
-        } catch ( FileNotFoundException e ) {
-            e.printStackTrace();
-        }
-        */
-
         cargarFotos();
 
         listaFoto = findViewById( R.id.galeria_fotos );
@@ -109,33 +118,6 @@ public class MainActivity extends AppCompatActivity {
         return img;
     }
 
-    /*
-    public void btnCaptura ( View v ) {
-        // Formar el nombre del archivo basado en la fecha y hora para que ese nombre sea unico
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat ( "yyyyMMddHHmmss" );
-        String strFechaHora = simpleDateFormat.format ( new Date() );
-        String archFoto     = "foto" + strFechaHora + ".jpg";
-
-        File fileFoto = new File ( Environment.getExternalStorageDirectory().getAbsolutePath() +
-                File.separator +
-                "DCIM" +
-                File.separator +
-                archFoto );
-
-        // Creamos el URI correspondiente al archivo de destino de la foto. Se usa
-        // FileProvider para respaldar las politicas de seguridad.
-        uriFoto = FileProvider.getUriForFile ( this,
-                                                BuildConfig.APPLICATION_ID + ".provider",
-                                                        fileFoto );
-        // Creamos el intent que llamara a la app de la camara de fotos y le pasamos el URI
-        // del archivo donde se debera guardar la foto si es que se captura una.
-
-        Intent intent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE );
-        intent.putExtra ( MediaStore.EXTRA_OUTPUT, uriFoto );
-        startActivityForResult ( intent, CODIGO_CAPTURA_FOTO );
-    }
-    */
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -144,13 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap image = BitmapFactory.decodeFile( archivo.getAbsolutePath() );
                 fotos.add( image );
                 adapter.notifyDataSetChanged();
-                /*
-                // Abrir el activity para mostrar la foto en pantalla completa.
-                // Se enviar como argumentos el URI de la foto como string
-                Intent intent = new Intent ( this, MuestraFotoActivity.class );
-                intent.putExtra ( "uri", uriFoto.toString() );
-                startActivity( intent );
-                 */
             }
         }
     }
@@ -164,4 +139,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        if ( item.getItemId() == R.id.home ) {
+            Toast.makeText( this, "UWU", Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
+    }
 }
