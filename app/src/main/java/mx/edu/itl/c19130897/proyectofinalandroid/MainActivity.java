@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         listaFoto = findViewById( R.id.galeria_fotos );
         adapter = new FotoAdapter ( fotos, this );
-        listaFoto.setLayoutManager( new GridLayoutManager(this, 4));
+        listaFoto.setLayoutManager( new GridLayoutManager(this, 4 ));
         listaFoto.setAdapter( adapter );
 
         FloatingActionButton btn = findViewById( R.id.botonFoto );
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         File img = File.createTempFile( pre + UUID.randomUUID().toString(), ".jpg", directorio );
         return img;
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/imgViewFoto"
-        android:layout_width="156dp"
-        android:layout_height="147dp"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_margin="2dp"
         tools:layout_editor_absoluteX="142dp"
         tools:layout_editor_absoluteY="20dp"
         tools:srcCompat="@tools:sample/avatars" />
