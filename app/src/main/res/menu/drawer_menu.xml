@@ -5,13 +5,28 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:icon="@drawable/image"
             android:id="@+id/album_default"
-            android:title="Default" />
+            android:title="Principal" />
         <item
+            android:icon="@drawable/pen"
             android:id="@+id/album_universidad"
             android:title="Universidad" />
         <item
+            android:icon="@drawable/home"
             android:id="@+id/album_casa"
             android:title="Casa" />
+        <item
+            android:icon="@drawable/flight"
+            android:id="@+id/album_viajes"
+            android:title="Viajes" />
+        <item
+            android:icon="@drawable/moctail"
+            android:id="@+id/album_fiestas"
+            android:title="Fiestas" />
+        <item
+            android:icon="@drawable/fork"
+            android:id="@+id/album_comida"
+            android:title="Comida" />
     </group>
 </menu>

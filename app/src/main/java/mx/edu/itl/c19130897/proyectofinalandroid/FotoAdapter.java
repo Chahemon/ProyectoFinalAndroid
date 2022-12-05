@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,10 +21,19 @@ import java.util.List;
 
 public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
-    private List<Bitmap> lista;
+    private List<Foto> lista;
     private Context context;
+    private int posicion;
 
-    public FotoAdapter ( List<Bitmap> lista, Context context ) {
+    public int getPosicion() {
+        return posicion;
+    }
+
+    public void setPosicion(int position) {
+        this.posicion = position;
+    }
+
+    public FotoAdapter (List<Foto> lista, Context context ) {
         this.lista = lista;
         this.context = context;
     }
@@ -43,19 +54,29 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Bitmap bitmap = lista.get( position );
-        holder.image.setImageBitmap(bitmap);
+    public void onBindViewHolder( @NonNull ViewHolder holder, int position ) {
+        int actPosition = position;
+        Foto bitmap = lista.get( position );
+        holder.image.setImageBitmap( bitmap.getFoto() );
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( context, MuestraFotoActivity.class);
-                intent.putExtra("uri", getImageUri( context, bitmap).toString() );
+                intent.putExtra("uri", getImageUri( context, bitmap.getFoto() ).toString() );
 
                 context.startActivity( intent );
             }
         });
+
+        holder.image.setOnLongClickListener( new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                setPosicion( actPosition );
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -68,13 +89,18 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolder> {
 
         private ImageView image;
 
-        public ViewHolder ( @NonNull View itemView ) {
-            super( itemView );
-            image = itemView.findViewById( R.id.imgViewFoto );
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.imgViewFoto);
+
+            itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                    MenuInflater inflater = new MenuInflater(view.getContext());
+                    inflater.inflate(R.menu.menu_contextual_foto, contextMenu);
+                }
+            });
         }
-
-
-
     }
 
 }

@@ -3,14 +3,17 @@ package mx.edu.itl.c19130897.proyectofinalandroid;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,8 +21,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private NavigationView navigationView;
 
-    private List<Bitmap> fotos = new ArrayList<>();
+    private List<Foto> fotos = new ArrayList<>();
 
     private PermisoApp [] permisosReq = {
             new PermisoApp ( Manifest.permission.READ_EXTERNAL_STORAGE, "Almacenamiento Read", true ),
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for ( File f:ficheros ) {
             if ( f.getName().startsWith( AlbumActual )) {
                 Bitmap image = BitmapFactory.decodeFile( f.getAbsolutePath() );
-                fotos.add( image );
+                fotos.add( new Foto( f.toString(), image ) );
             }
         }
     }
@@ -129,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if ( requestCode == CODIGO_CAPTURA_FOTO ) {
             if ( resultCode == RESULT_OK ) {
                 Bitmap image = BitmapFactory.decodeFile( archivo.getAbsolutePath() );
-                fotos.add( image );
+                fotos.add( new Foto( archivo.toString(), image ) );
                 adapter.notifyDataSetChanged();
             }
         }
@@ -147,15 +153,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+        TextView textView = findViewById( R.id.textView );
+        drawerLayout.closeDrawer( GravityCompat.START );
+
         switch ( item.getItemId() ) {
-            case R.id.album_default: AlbumActual = "Default_"; Toast.makeText( this, "Default_", Toast.LENGTH_SHORT ).show();
+            case R.id.album_default: AlbumActual = "Default_"; textView.setText( "Album Principal" );
                                     cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_casa: AlbumActual = "Casa_"; Toast.makeText( this, "Casa_", Toast.LENGTH_SHORT ).show();
+            case R.id.album_casa: AlbumActual = "Casa_"; textView.setText( "Album Casa" );
                                     cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_universidad: AlbumActual = "Universidad_"; Toast.makeText( this, "Universidad_", Toast.LENGTH_SHORT ).show();
+            case R.id.album_universidad: AlbumActual = "Universidad_"; textView.setText( "Album Universidad" );
                                     cargarFotos (); adapter.notifyDataSetChanged(); break;
+            case R.id.album_viajes: AlbumActual = "Viajes_"; textView.setText( "Album Viajes" );
+                cargarFotos (); adapter.notifyDataSetChanged(); break;
+            case R.id.album_fiestas: AlbumActual = "Fiestas_"; textView.setText( "Album Fiestas" );
+                cargarFotos (); adapter.notifyDataSetChanged(); break;
+            case R.id.album_comida: AlbumActual = "Comidas_"; textView.setText( "Album Comidas" );
+                cargarFotos (); adapter.notifyDataSetChanged(); break;
         }
 
         return false;
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        if ( item.getItemId() == R.id.borrar ) {
+
+            // Obtenemos la posicion de la referencia que vamos a eliminar
+            int position = adapter.getPosicion();
+            Foto f = fotos.get( position );
+
+            // Eliminamos el la fotos de nuestros archivos
+            File file = new File ( f.getFichero() );
+            file.delete();
+
+            // Eliminamos las fotos del recycler view y actualizamos los cambios
+            fotos.remove( position );
+            adapter.notifyDataSetChanged();
+
+        }
+
+        return super.onContextItemSelected(item);
     }
 }
