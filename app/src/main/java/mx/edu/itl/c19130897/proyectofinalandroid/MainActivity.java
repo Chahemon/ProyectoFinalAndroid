@@ -23,8 +23,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerView listaFoto;
     private FotoAdapter adapter;
     private String AlbumActual = "Default_";
+    private String SubAlbum = "";
 
     // Barra Lateral
     private DrawerLayout drawerLayout;
@@ -123,8 +127,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public File crearFichero () throws IOException {
         String pre = AlbumActual;
+        String subalbum = SubAlbum;
         File directorio = this.getExternalFilesDir( Environment.DIRECTORY_PICTURES );
-        File img = File.createTempFile( pre + UUID.randomUUID().toString(), ".jpg", directorio );
+        File img = File.createTempFile( pre + subalbum + UUID.randomUUID().toString(), ".jpg", directorio );
         return img;
     }
 
@@ -157,17 +162,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer( GravityCompat.START );
 
         switch ( item.getItemId() ) {
-            case R.id.album_default: AlbumActual = "Default_"; textView.setText( "Album Principal" );
+            case R.id.album_default: AlbumActual = "Default_"; SubAlbum = ""; textView.setText( "Album Principal" );
                                     cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_casa: AlbumActual = "Casa_"; textView.setText( "Album Casa" );
+            case R.id.album_casa: AlbumActual = "Casa_"; SubAlbum = ""; textView.setText( "Album Casa" );
                                     cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_universidad: AlbumActual = "Universidad_"; textView.setText( "Album Universidad" );
+            case R.id.album_universidad: AlbumActual = "Universidad_"; SubAlbum = ""; textView.setText( "Album Universidad" );
                                     cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_viajes: AlbumActual = "Viajes_"; textView.setText( "Album Viajes" );
+            case R.id.album_viajes: AlbumActual = "Viajes_"; SubAlbum = ""; textView.setText( "Album Viajes" );
                 cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_fiestas: AlbumActual = "Fiestas_"; textView.setText( "Album Fiestas" );
+            case R.id.album_fiestas: AlbumActual = "Fiestas_"; SubAlbum = ""; textView.setText( "Album Fiestas" );
                 cargarFotos (); adapter.notifyDataSetChanged(); break;
-            case R.id.album_comida: AlbumActual = "Comidas_"; textView.setText( "Album Comidas" );
+            case R.id.album_comida: AlbumActual = "Comidas_"; SubAlbum = ""; textView.setText( "Album Comidas" );
                 cargarFotos (); adapter.notifyDataSetChanged(); break;
         }
 
@@ -192,7 +197,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             adapter.notifyDataSetChanged();
 
         }
-
         return super.onContextItemSelected(item);
     }
+
+    private String ruta;
+    public void btnAcercaDe ( View v ) {
+        // Poner video de acerca de
+        ruta = "android.resource://" + this.getPackageName() + "/" + R.raw.la_pachanga;
+        lanzarVideoActiviy ();
+    }
+
+    private void  lanzarVideoActiviy () {
+        Intent intent = new Intent ( this, VideoActivity.class ) ;
+        intent.putExtra ( "rutaVideo", ruta );
+        startActivity ( intent );
+    }
+
+    private View subalbum_layout;
+    private EditText edtSubalbum;
+
+    public void btnEditarSubalbum ( View v ) {
+        // Obtenemos la referencia del layout a incrustar
+        subalbum_layout = this.getLayoutInflater().inflate( R.layout.layout_subalbum, null );
+        // Obtener las referencias a los campos EditText
+        edtSubalbum = subalbum_layout.findViewById( R.id.edtSubAlbum );
+
+        // Construimos el AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder( this );
+        builder.setTitle( "Nombre Subalbum" )
+                .setView( subalbum_layout )
+                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SubAlbum = edtSubalbum.getText().toString() + "_";
+                    }
+                })
+                .setNegativeButton("Salir", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setCancelable( false )
+                .setIcon( R.drawable.edit )
+                .create()
+                .show();
+    }
+
 }
