@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public File crearFichero () throws IOException {
         String pre = AlbumActual;
         String subalbum = SubAlbum;
-        File directorio = this.getExternalFilesDir( Environment.DIRECTORY_PICTURES );
+        File directorio = this.getExternalFilesDir ( Environment.DIRECTORY_PICTURES );
         File img = File.createTempFile( pre + subalbum + UUID.randomUUID().toString(), ".jpg", directorio );
         return img;
     }
