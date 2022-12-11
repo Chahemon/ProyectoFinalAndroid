@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String ruta;
     public void btnAcercaDe ( View v ) {
         // Poner video de acerca de
-        ruta = "android.resource://" + this.getPackageName() + "/" + R.raw.la_pachanga;
+        ruta = "android.resource://" + this.getPackageName() + "/" + R.raw.acerca_de;
         lanzarVideoActiviy ();
     }
 
