@@ -9,28 +9,30 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#474341"
+        android:background="#0D47A1"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-            <ImageButton
-                android:id="@+id/btnAcercaDe"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="2dp"
-                android:onClick="btnAcercaDe"
-                android:scaleType="fitXY"
-                android:src="@drawable/help" />
+        <ImageButton
+            android:id="@+id/btnAcercaDe"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="2dp"
+            android:backgroundTint="#0D47A1"
+            android:onClick="btnAcercaDe"
+            android:scaleType="fitXY"
+            android:src="@drawable/help" />
 
-            <ImageButton
-                android:id="@+id/btnSubalbum"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="5dp"
-                android:onClick="btnEditarSubalbum"
-                android:scaleType="fitXY"
-                android:src="@drawable/edit" />
+        <ImageButton
+            android:id="@+id/btnSubalbum"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="#0D47A1"
+            android:onClick="btnEditarSubalbum"
+            android:scaleType="fitXY"
+            android:src="@drawable/edit" />
 
     </androidx.appcompat.widget.Toolbar>
 
